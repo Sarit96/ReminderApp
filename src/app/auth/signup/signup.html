@@ -1,0 +1,51 @@
+<div class="signup-container">
+  <h2>Create Account</h2>
+  
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="signup-form">
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" formControlName="name" required>
+      <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="error-message">
+        <span *ngIf="form.get('name')?.errors?.['required']">Name is required.</span>
+        <span *ngIf="form.get('name')?.errors?.['minlength']">Name must be at least 2 characters.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" required>
+      <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error-message">
+        <span *ngIf="form.get('email')?.errors?.['required']">Email is required.</span>
+        <span *ngIf="form.get('email')?.errors?.['email']">Enter a valid email.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password" required>
+      <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error-message">
+        <span *ngIf="form.get('password')?.errors?.['required']">Password is required.</span>
+        <span *ngIf="form.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" formControlName="confirmPassword" required>
+      <div *ngIf="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched" class="error-message">
+        <span *ngIf="form.get('confirmPassword')?.errors?.['required']">Please confirm your password.</span>
+        <span *ngIf="form.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match.</span>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <button type="submit" [disabled]="form.invalid" class="submit-btn">Sign Up</button>
+  </form>
+
+  <div class="login-link">
+    <p>Already have an account? <a (click)="goToLogin()" class="link">Login here</a></p>
+  </div>
+</div>
