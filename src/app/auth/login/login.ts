@@ -10,16 +10,18 @@ import { Router } from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-
-
 export class Login {
   form;
   error: string | null = null;
 
-  constructor(private fb: FormBuilder, private auth: Auth, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: Auth,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -29,13 +31,12 @@ export class Login {
       const formValue = this.form.value as { email: string; password: string };
       this.auth.login(formValue).subscribe({
         next: () => {
-
           alert('Login successful!');
-
+          this.router.navigate(['/home']);
         },
-        error: (err: { message: string; }) => {
+        error: (err: { message: string }) => {
           this.error = err.message || 'Login failed';
-        }
+        },
       });
     }
   }
