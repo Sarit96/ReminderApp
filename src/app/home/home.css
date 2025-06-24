@@ -183,6 +183,22 @@
   background: #b52a37;
 }
 
+.edit-btn {
+  background: #ffc107;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s;
+}
+.edit-btn:hover {
+  background: #e0a800;
+}
+
 .no-reminders {
   color: #888;
   margin-top: 40px;
