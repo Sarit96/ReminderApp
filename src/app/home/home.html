@@ -1,0 +1,79 @@
+<div class="home-container">
+  <h2>Reminders</h2>
+  <button class="logout-btn" (click)="logout()">Logout</button>
+-
+  <button class="add-btn" (click)="openForm()" *ngIf="!showForm">
+    + Add Reminder
+  </button>
+
+  <div class="reminder-form-container" *ngIf="showForm">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reminder-form">
+      <div class="form-group">
+        <label for="title">Title<span class="required">*</span></label>
+        <input id="title" type="text" formControlName="title" required />
+        <div
+          *ngIf="form.get('title')?.invalid && form.get('title')?.touched"
+          class="error-message"
+        >
+          Title is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="datetime">Date & Time<span class="required">*</span></label>
+        <input
+          id="datetime"
+          type="datetime-local"
+          formControlName="datetime"
+          required
+        />
+        <div
+          *ngIf="form.get('datetime')?.invalid && form.get('datetime')?.touched"
+          class="error-message"
+        >
+          Date & Time is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" formControlName="notes" rows="2"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" [disabled]="form.invalid" class="submit-btn">
+          {{ editingIndex !== null ? 'Update' : 'Add' }}
+        </button>
+        <button type="button" class="cancel-btn" (click)="closeForm()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="reminders-list" *ngIf="reminders.length > 0">
+    <div
+      class="reminder-item"
+      *ngFor="let reminder of reminders; let i = index"
+    >
+      <div class="reminder-info" (click)="editReminder(i)">
+        <div class="reminder-title">{{ reminder.title }}</div>
+        <div class="reminder-datetime">
+          {{ reminder.datetime | date:'medium' }}
+        </div>
+        <div class="reminder-notes" *ngIf="reminder.notes">
+          {{ reminder.notes }}
+        </div>
+      </div>
+      <button class="delete-btn" (click)="confirmDelete(i)">Delete</button>
+    </div>
+  </div>
+  <div *ngIf="reminders.length === 0 && !showForm" class="no-reminders">
+    No reminders yet.
+  </div>
+
+  <div class="confirm-dialog" *ngIf="showConfirmDelete">
+    <div class="confirm-content">
+      <p>Are you sure you want to delete this reminder?</p>
+      <button class="confirm-btn" (click)="deleteReminder()">Yes</button>
+      <button class="cancel-btn" (click)="cancelDelete()">No</button>
+    </div>
+  </div>
+</div>
