@@ -1,10 +1,10 @@
 .home-container {
-  max-width: 600px;
+  max-width: 900px;
   margin: 40px auto;
-  padding: 30px;
+  padding: 40px;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   text-align: center;
 }
 
@@ -235,4 +235,25 @@
 }
 .confirm-btn:hover {
   background: #b52a37;
+}
+
+.main-content-wrapper {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.main-content {
+  flex: 2;
+  min-width: 350px;
+}
+
+.upcoming-panel {
+  flex: 1;
+  background: #f8f9fa;
+  border-radius: 14px;
+  padding: 28px 22px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  min-width: 260px;
+  max-width: 350px;
 } 

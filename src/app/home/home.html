@@ -6,6 +6,27 @@
     + Add Reminder
   </button>
 
+  <div class="main-content-wrapper">
+    <div class="main-content">
+      <ng-container *ngTemplateOutlet="mainReminders"></ng-container>
+    </div>
+    <div class="upcoming-panel">
+      <h3>Upcoming (2 days)</h3>
+      <div *ngIf="upcomingReminders.length > 0; else noUpcoming">
+        <div class="upcoming-item" *ngFor="let reminder of upcomingReminders">
+          <div class="upcoming-title">{{ reminder.title }}</div>
+          <div class="upcoming-datetime">{{ reminder.datetime | date:'medium' }}</div>
+          <div class="upcoming-notes" *ngIf="reminder.notes">{{ reminder.notes }}</div>
+        </div>
+      </div>
+      <ng-template #noUpcoming>
+        <div class="no-upcoming">No upcoming events</div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<ng-template #mainReminders>
   <div class="reminder-form-container" *ngIf="showForm">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reminder-form">
       <div class="form-group">
@@ -43,6 +64,11 @@
           <option value="">Select Type</option>
           <option *ngFor="let type of reminderTypes" [value]="type">{{ type }}</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label for="invite">Invite (demo)</label>
+        <input id="invite" type="text" formControlName="invite" placeholder="Enter email(s)" />
+        <div class="form-hint">(Demo: This does not actually invite anyone)</div>
       </div>
       <div class="form-actions">
         <button type="submit" [disabled]="form.invalid" class="submit-btn">
@@ -82,6 +108,9 @@
         <div class="reminder-notes" *ngIf="reminder.notes">
           {{ reminder.notes }}
         </div>
+        <div class="reminder-invite" *ngIf="reminder.invite">
+          <strong>Invited:</strong> {{ reminder.invite }}
+        </div>
       </div>
       <button class="edit-btn" (click)="editReminder(i)">Edit</button>
       <button class="delete-btn" (click)="confirmDelete(i)">Delete</button>
@@ -98,4 +127,17 @@
       <button class="cancel-btn" (click)="cancelDelete()">No</button>
     </div>
   </div>
-</div>
+
+  <!-- Upcoming Reminder Popup -->
+  <div class="confirm-dialog" *ngIf="upcomingPopup.show">
+    <div class="confirm-content">
+      <h3>Upcoming Reminder!</h3>
+      <div *ngIf="upcomingPopup.reminder">
+        <div><strong>Title:</strong> {{ upcomingPopup.reminder.title }}</div>
+        <div><strong>Date & Time:</strong> {{ upcomingPopup.reminder.datetime | date:'medium' }}</div>
+        <div *ngIf="upcomingPopup.reminder.notes"><strong>Notes:</strong> {{ upcomingPopup.reminder.notes }}</div>
+      </div>
+      <button class="submit-btn" (click)="closeUpcomingPopup()">Dismiss</button>
+    </div>
+  </div>
+</ng-template>
