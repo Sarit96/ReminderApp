@@ -37,6 +37,13 @@
         <label for="notes">Notes</label>
         <textarea id="notes" formControlName="notes" rows="2"></textarea>
       </div>
+      <div class="form-group">
+        <label for="type">Type<span class="required">*</span></label>
+        <select id="type" formControlName="type" required>
+          <option value="">Select Type</option>
+          <option *ngFor="let type of reminderTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
       <div class="form-actions">
         <button type="submit" [disabled]="form.invalid" class="submit-btn">
           {{ editingIndex !== null ? 'Update' : 'Add' }}
@@ -48,10 +55,24 @@
     </form>
   </div>
 
-  <div class="reminders-list" *ngIf="reminders.length > 0">
+  <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: 20px; align-items: center;">
+    <label>
+      Filter by Date:
+      <input type="date" [(ngModel)]="filterDate" name="filterDate" style="margin-left: 6px;" />
+    </label>
+    <label>
+      Filter by Type:
+      <select [(ngModel)]="filterType" name="filterType">
+        <option value="">All</option>
+        <option *ngFor="let type of reminderTypes" [value]="type">{{ type }}</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="reminders-list" *ngIf="filteredReminders.length > 0">
     <div
       class="reminder-item"
-      *ngFor="let reminder of reminders; let i = index"
+      *ngFor="let reminder of filteredReminders; let i = index"
     >
       <div class="reminder-info" (click)="editReminder(i)">
         <div class="reminder-title">{{ reminder.title }}</div>
@@ -62,10 +83,11 @@
           {{ reminder.notes }}
         </div>
       </div>
+      <button class="edit-btn" (click)="editReminder(i)">Edit</button>
       <button class="delete-btn" (click)="confirmDelete(i)">Delete</button>
     </div>
   </div>
-  <div *ngIf="reminders.length === 0 && !showForm" class="no-reminders">
+  <div *ngIf="filteredReminders.length === 0 && !showForm" class="no-reminders">
     No reminders yet.
   </div>
 

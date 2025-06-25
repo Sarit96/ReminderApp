@@ -8,11 +8,12 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -23,6 +24,17 @@ export class Home {
   showForm = false;
   showConfirmDelete = false;
   deleteIndex: number | null = null;
+  filterDate: string = '';
+  filterType: string = '';
+  reminderTypes: string[] = ['Work', 'Personal', 'Other'];
+
+  get filteredReminders() {
+    return this.reminders.filter(reminder => {
+      const matchesDate = this.filterDate ? reminder.datetime.startsWith(this.filterDate) : true;
+      const matchesType = this.filterType ? reminder.type === this.filterType : true;
+      return matchesDate && matchesType;
+    });
+  }
 
   constructor(
     private auth: Auth,
@@ -32,6 +44,7 @@ export class Home {
     this.form = this.fb.group({
       title: ['', Validators.required],
       datetime: ['', Validators.required],
+      type: ['', Validators.required],
       notes: [''],
     });
     this.loadReminders();
@@ -59,6 +72,7 @@ export class Home {
       this.form.setValue({
         title: reminder.title,
         datetime: reminder.datetime,
+        type: reminder.type || '',
         notes: reminder.notes || '',
       });
     } else {
