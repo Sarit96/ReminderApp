@@ -28,11 +28,26 @@ export class Home {
   filterType: string = '';
   reminderTypes: string[] = ['Work', 'Personal', 'Other'];
 
+  // Popup state for upcoming reminders
+  upcomingPopup: { show: boolean; reminder: any } = { show: false, reminder: null };
+  shownPopupIds: Set<string> = new Set();
+  intervalId: any;
+
   get filteredReminders() {
     return this.reminders.filter(reminder => {
       const matchesDate = this.filterDate ? reminder.datetime.startsWith(this.filterDate) : true;
       const matchesType = this.filterType ? reminder.type === this.filterType : true;
       return matchesDate && matchesType;
+    });
+  }
+
+  get upcomingReminders() {
+    const now = new Date();
+    const twoDaysLater = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+    return this.reminders.filter(reminder => {
+      if (!reminder.datetime) return false;
+      const reminderTime = new Date(reminder.datetime);
+      return reminderTime > now && reminderTime <= twoDaysLater;
     });
   }
 
@@ -46,8 +61,38 @@ export class Home {
       datetime: ['', Validators.required],
       type: ['', Validators.required],
       notes: [''],
+      invite: [''],
     });
     this.loadReminders();
+    this.startUpcomingReminderCheck();
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  startUpcomingReminderCheck() {
+    this.intervalId = setInterval(() => {
+      const now = new Date();
+      for (const reminder of this.reminders) {
+        if (!reminder.datetime) continue;
+        const reminderTime = new Date(reminder.datetime);
+        const diff = (reminderTime.getTime() - now.getTime()) / 60000; // minutes
+        // Use title+datetime as a unique id for session
+        const popupId = reminder.title + reminder.datetime;
+        if (diff > 0 && diff <= 5 && !this.shownPopupIds.has(popupId)) {
+          this.upcomingPopup = { show: true, reminder };
+          this.shownPopupIds.add(popupId);
+          break;
+        }
+      }
+    }, 60000); // check every minute
+  }
+
+  closeUpcomingPopup() {
+    this.upcomingPopup = { show: false, reminder: null };
   }
 
   logout() {
@@ -74,6 +119,7 @@ export class Home {
         datetime: reminder.datetime,
         type: reminder.type || '',
         notes: reminder.notes || '',
+        invite: reminder.invite || '',
       });
     } else {
       this.form.reset();
