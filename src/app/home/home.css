@@ -275,4 +275,63 @@
 }
 .calendar-fab-inside:hover {
   background: #1565c0;
+}
+
+.calendar-view {
+  margin: 24px auto;
+  max-width: 800px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 24px 12px 18px 12px;
+}
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 8px;
+}
+.calendar-day {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+}
+.calendar-body {
+  display: flex;
+  justify-content: space-between;
+}
+.calendar-cell {
+  flex: 1;
+  min-height: 120px;
+  background: #fff;
+  border-radius: 8px;
+  margin: 0 4px;
+  padding: 8px 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.calendar-date {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 6px;
+}
+.calendar-reminder {
+  background: #e3f0fc;
+  border-left: 4px solid #1976d2;
+  border-radius: 5px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  width: 100%;
+}
+.calendar-reminder-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1976d2;
+}
+.calendar-reminder-time {
+  font-size: 13px;
+  color: #555;
 } 
