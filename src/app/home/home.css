@@ -256,4 +256,23 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   min-width: 260px;
   max-width: 350px;
+}
+
+.calendar-fab-inside {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 10;
+}
+.calendar-fab-inside:hover {
+  background: #1565c0;
 } 

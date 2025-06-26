@@ -1,12 +1,12 @@
 <div class="home-container">
   <h2>Reminders</h2>
   <button class="logout-btn" (click)="logout()">Logout</button>
--
+  -
   <button class="add-btn" (click)="openForm()" *ngIf="!showForm">
     + Add Reminder
   </button>
 
-  <div class="main-content-wrapper">
+  <div class="main-content-wrapper" style="position: relative">
     <div class="main-content">
       <ng-container *ngTemplateOutlet="mainReminders"></ng-container>
     </div>
@@ -15,14 +15,19 @@
       <div *ngIf="upcomingReminders.length > 0; else noUpcoming">
         <div class="upcoming-item" *ngFor="let reminder of upcomingReminders">
           <div class="upcoming-title">{{ reminder.title }}</div>
-          <div class="upcoming-datetime">{{ reminder.datetime | date:'medium' }}</div>
-          <div class="upcoming-notes" *ngIf="reminder.notes">{{ reminder.notes }}</div>
+          <div class="upcoming-datetime">
+            {{ reminder.datetime | date:'medium' }}
+          </div>
+          <div class="upcoming-notes" *ngIf="reminder.notes">
+            {{ reminder.notes }}
+          </div>
         </div>
       </div>
       <ng-template #noUpcoming>
         <div class="no-upcoming">No upcoming events</div>
       </ng-template>
     </div>
+    <button class="calendar-fab-inside">Calendar View</button>
   </div>
 </div>
 
@@ -62,13 +67,22 @@
         <label for="type">Type<span class="required">*</span></label>
         <select id="type" formControlName="type" required>
           <option value="">Select Type</option>
-          <option *ngFor="let type of reminderTypes" [value]="type">{{ type }}</option>
+          <option *ngFor="let type of reminderTypes" [value]="type">
+            {{ type }}
+          </option>
         </select>
       </div>
       <div class="form-group">
         <label for="invite">Invite (demo)</label>
-        <input id="invite" type="text" formControlName="invite" placeholder="Enter email(s)" />
-        <div class="form-hint">(Demo: This does not actually invite anyone)</div>
+        <input
+          id="invite"
+          type="text"
+          formControlName="invite"
+          placeholder="Enter email(s)"
+        />
+        <div class="form-hint">
+          (Demo: This does not actually invite anyone)
+        </div>
       </div>
       <div class="form-actions">
         <button type="submit" [disabled]="form.invalid" class="submit-btn">
@@ -81,16 +95,31 @@
     </form>
   </div>
 
-  <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: 20px; align-items: center;">
+  <div
+    style="
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 20px;
+      align-items: center;
+    "
+  >
     <label>
       Filter by Date:
-      <input type="date" [(ngModel)]="filterDate" name="filterDate" style="margin-left: 6px;" />
+      <input
+        type="date"
+        [(ngModel)]="filterDate"
+        name="filterDate"
+        style="margin-left: 6px"
+      />
     </label>
     <label>
       Filter by Type:
       <select [(ngModel)]="filterType" name="filterType">
         <option value="">All</option>
-        <option *ngFor="let type of reminderTypes" [value]="type">{{ type }}</option>
+        <option *ngFor="let type of reminderTypes" [value]="type">
+          {{ type }}
+        </option>
       </select>
     </label>
   </div>
@@ -128,14 +157,19 @@
     </div>
   </div>
 
-  <!-- Upcoming Reminder Popup -->
+ 
   <div class="confirm-dialog" *ngIf="upcomingPopup.show">
     <div class="confirm-content">
       <h3>Upcoming Reminder!</h3>
       <div *ngIf="upcomingPopup.reminder">
         <div><strong>Title:</strong> {{ upcomingPopup.reminder.title }}</div>
-        <div><strong>Date & Time:</strong> {{ upcomingPopup.reminder.datetime | date:'medium' }}</div>
-        <div *ngIf="upcomingPopup.reminder.notes"><strong>Notes:</strong> {{ upcomingPopup.reminder.notes }}</div>
+        <div>
+          <strong>Date & Time:</strong> {{ upcomingPopup.reminder.datetime |
+          date:'medium' }}
+        </div>
+        <div *ngIf="upcomingPopup.reminder.notes">
+          <strong>Notes:</strong> {{ upcomingPopup.reminder.notes }}
+        </div>
       </div>
       <button class="submit-btn" (click)="closeUpcomingPopup()">Dismiss</button>
     </div>
