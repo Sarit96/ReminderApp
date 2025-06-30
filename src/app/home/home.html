@@ -8,9 +8,27 @@
 
   <div class="main-content-wrapper" style="position: relative">
     <div class="main-content">
-      <ng-container *ngTemplateOutlet="mainReminders"></ng-container>
+      <ng-container *ngIf="!isCalendarView; else calendarView">
+        <ng-container *ngTemplateOutlet="mainReminders"></ng-container>
+      </ng-container>
     </div>
-    <div class="upcoming-panel">
+    <ng-template #calendarView>
+      <div class="calendar-view">
+        <div class="calendar-header">
+          <div class="calendar-day" *ngFor="let day of weekDays">{{ day.label }}</div>
+        </div>
+        <div class="calendar-body">
+          <div class="calendar-cell" *ngFor="let day of weekDays">
+            <div class="calendar-date">{{ day.date | date:'EEE, d MMM' }}</div>
+            <div class="calendar-reminder" *ngFor="let reminder of reminders | calendarDay:day.date">
+              <div class="calendar-reminder-title">{{ reminder.title }}</div>
+              <div class="calendar-reminder-time">{{ reminder.datetime | date:'shortTime' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <div class="upcoming-panel" *ngIf="!isCalendarView">
       <h3>Upcoming (2 days)</h3>
       <div *ngIf="upcomingReminders.length > 0; else noUpcoming">
         <div class="upcoming-item" *ngFor="let reminder of upcomingReminders">
@@ -27,7 +45,9 @@
         <div class="no-upcoming">No upcoming events</div>
       </ng-template>
     </div>
-    <button class="calendar-fab-inside">Calendar View</button>
+    <button class="calendar-fab-inside" (click)="toggleView()">
+      {{ isCalendarView ? 'List View' : 'Calendar View' }}
+    </button>
   </div>
 </div>
 
@@ -37,25 +57,14 @@
       <div class="form-group">
         <label for="title">Title<span class="required">*</span></label>
         <input id="title" type="text" formControlName="title" required />
-        <div
-          *ngIf="form.get('title')?.invalid && form.get('title')?.touched"
-          class="error-message"
-        >
+        <div *ngIf="form.get('title')?.invalid && form.get('title')?.touched" class="error-message">
           Title is required.
         </div>
       </div>
       <div class="form-group">
         <label for="datetime">Date & Time<span class="required">*</span></label>
-        <input
-          id="datetime"
-          type="datetime-local"
-          formControlName="datetime"
-          required
-        />
-        <div
-          *ngIf="form.get('datetime')?.invalid && form.get('datetime')?.touched"
-          class="error-message"
-        >
+        <input id="datetime" type="datetime-local" formControlName="datetime" required />
+        <div *ngIf="form.get('datetime')?.invalid && form.get('datetime')?.touched" class="error-message">
           Date & Time is required.
         </div>
       </div>
@@ -74,12 +83,7 @@
       </div>
       <div class="form-group">
         <label for="invite">Invite (demo)</label>
-        <input
-          id="invite"
-          type="text"
-          formControlName="invite"
-          placeholder="Enter email(s)"
-        />
+        <input id="invite" type="text" formControlName="invite" placeholder="Enter email(s)" />
         <div class="form-hint">
           (Demo: This does not actually invite anyone)
         </div>
@@ -95,23 +99,16 @@
     </form>
   </div>
 
-  <div
-    style="
+  <div style="
       display: flex;
       gap: 16px;
       justify-content: center;
       margin-bottom: 20px;
       align-items: center;
-    "
-  >
+    ">
     <label>
       Filter by Date:
-      <input
-        type="date"
-        [(ngModel)]="filterDate"
-        name="filterDate"
-        style="margin-left: 6px"
-      />
+      <input type="date" [(ngModel)]="filterDate" name="filterDate" style="margin-left: 6px" />
     </label>
     <label>
       Filter by Type:
@@ -125,10 +122,7 @@
   </div>
 
   <div class="reminders-list" *ngIf="filteredReminders.length > 0">
-    <div
-      class="reminder-item"
-      *ngFor="let reminder of filteredReminders; let i = index"
-    >
+    <div class="reminder-item" *ngFor="let reminder of filteredReminders; let i = index">
       <div class="reminder-info" (click)="editReminder(i)">
         <div class="reminder-title">{{ reminder.title }}</div>
         <div class="reminder-datetime">
@@ -157,7 +151,7 @@
     </div>
   </div>
 
- 
+
   <div class="confirm-dialog" *ngIf="upcomingPopup.show">
     <div class="confirm-content">
       <h3>Upcoming Reminder!</h3>

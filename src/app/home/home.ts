@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '../auth/auth';
 import {
@@ -9,11 +9,12 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CalendarDayPipe } from './calendar-day.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, CalendarDayPipe],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -27,6 +28,7 @@ export class Home {
   filterDate: string = '';
   filterType: string = '';
   reminderTypes: string[] = ['Work', 'Personal', 'Other'];
+  isCalendarView = false;
 
   
   upcomingPopup: { show: boolean; reminder: any } = {
@@ -55,6 +57,19 @@ export class Home {
       if (!reminder.datetime) return false;
       const reminderTime = new Date(reminder.datetime);
       return reminderTime > now && reminderTime <= twoDaysLater;
+    });
+  }
+
+  get weekDays() {
+    const start = new Date();
+    start.setDate(start.getDate() - start.getDay()); // Sunday
+    return Array.from({ length: 7 }).map((_, i) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      return {
+        label: d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric' }),
+        date: new Date(d.getFullYear(), d.getMonth(), d.getDate())
+      };
     });
   }
 
@@ -171,5 +186,9 @@ export class Home {
   cancelDelete() {
     this.showConfirmDelete = false;
     this.deleteIndex = null;
+  }
+
+  toggleView() {
+    this.isCalendarView = !this.isCalendarView;
   }
 }
