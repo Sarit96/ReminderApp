@@ -15,7 +15,9 @@
     <ng-template #calendarView>
       <div class="calendar-view">
         <div class="calendar-header">
+          <button class="calendar-header-arrow" (click)="previousWeek()">«</button>
           <div class="calendar-day" *ngFor="let day of weekDays">{{ day.label }}</div>
+          <button class="calendar-header-arrow" (click)="nextWeek()">»</button>
         </div>
         <div class="calendar-body">
           <div class="calendar-cell" *ngFor="let day of weekDays">

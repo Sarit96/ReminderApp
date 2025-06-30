@@ -30,7 +30,8 @@ export class Home {
   reminderTypes: string[] = ['Work', 'Personal', 'Other'];
   isCalendarView = false;
 
-  
+  currentWeekStart = this.getStartOfWeek(new Date());
+
   upcomingPopup: { show: boolean; reminder: any } = {
     show: false,
     reminder: null,
@@ -60,12 +61,29 @@ export class Home {
     });
   }
 
+  private getStartOfWeek(date: Date): Date {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - d.getDay());
+    return d;
+  }
+
+  public previousWeek() {
+    const prev = new Date(this.currentWeekStart);
+    prev.setDate(prev.getDate() - 7);
+    this.currentWeekStart = this.getStartOfWeek(prev);
+  }
+
+  public nextWeek() {
+    const next = new Date(this.currentWeekStart);
+    next.setDate(next.getDate() + 7);
+    this.currentWeekStart = this.getStartOfWeek(next);
+  }
+
   get weekDays() {
-    const start = new Date();
-    start.setDate(start.getDate() - start.getDay()); // Sunday
     return Array.from({ length: 7 }).map((_, i) => {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
+      const d = new Date(this.currentWeekStart);
+      d.setDate(this.currentWeekStart.getDate() + i);
       return {
         label: d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric' }),
         date: new Date(d.getFullYear(), d.getMonth(), d.getDate())
